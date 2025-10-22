@@ -7,14 +7,15 @@
   <style>
     body, html {margin:0;padding:0;font-family:sans-serif;background:#000;color:#fff;}
     header{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-    video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.75);}
+    video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.6);}
+    .video-gradient{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));z-index:5;}
     .hero-content{position:relative;z-index:10;text-align:center;padding:0 20px;}
     h1{font-size:4rem;margin:0;} p{font-size:1.5rem;margin-top:10px;opacity:0.85;}
-    .input-container{margin-top:30px;display:flex;gap:10px;max-width:600px;margin-left:auto;margin-right:auto;}
-    input{flex:1;padding:12px;border-radius:12px;background:rgba(255,255,255,0.05);border:none;color:#fff;outline:none;}
-    button{padding:12px 20px;border-radius:12px;background:linear-gradient(90deg,#7c3aed,#ec4899);border:none;color:#fff;font-weight:bold;cursor:pointer;transition:0.2s;}
+    .input-container{margin-top:40px;display:flex;gap:10px;max-width:700px;margin-left:auto;margin-right:auto;}
+    input{flex:1;padding:18px;font-size:1.2rem;border-radius:20px;background:rgba(255,255,255,0.15);border:none;color:#fff;outline:none;font-weight:bold;box-shadow:0 0 20px rgba(124,58,237,0.6);}
+    button{padding:16px 24px;border-radius:20px;background:linear-gradient(90deg,#7c3aed,#ec4899);border:none;color:#fff;font-weight:bold;cursor:pointer;transition:0.2s;font-size:1.1rem;}
     button:hover{opacity:0.9;}
-    .idea-box{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);padding:20px;border-radius:20px;margin-top:20px;max-width:700px;margin-left:auto;margin-right:auto;white-space:pre-line;}
+    .idea-box{background:rgba(0,0,0,0.8);border:1px solid rgba(255,255,255,0.2);padding:25px;border-radius:25px;margin-top:25px;max-width:800px;margin-left:auto;margin-right:auto;white-space:pre-line;font-size:1.1rem;line-height:1.6;}
     .projects{display:grid;grid-template-columns:1fr;gap:20px;padding:50px 20px;}
     @media(min-width:640px){.projects{grid-template-columns:1fr 1fr;}}
     @media(min-width:1024px){.projects{grid-template-columns:1fr 1fr 1fr;}}
@@ -29,6 +30,7 @@
 <body>
   <header>
     <video src="https://res.cloudinary.com/dxpygpngo/video/upload/v1761148124/mulher_futuristica_segurando_um_emblema_com_a_cp3iir.mp4" autoplay muted loop playsinline></video>
+    <div class="video-gradient"></div>
     <div class="hero-content">
       <h1>Marca Viva</h1>
       <p>Dê vida à sua marca</p>
@@ -37,7 +39,7 @@
         <button onclick="generateIdea()">Gerar ideia</button>
       </div>
       <div class="idea-box" id="ideaBox" style="display:none;"></div>
-      <button id="whatsappBtn" style="display:none;margin-top:10px;" onclick="contactTeam()">Falar com o time</button>
+      <button id="whatsappBtn" style="display:none;margin-top:15px;" onclick="contactTeam()">Falar com o time</button>
     </div>
   </header>
 
@@ -81,9 +83,9 @@
       if(!input) return;
       const words = input.split(/[,;\s]+/).filter(Boolean);
       const templates = [
-        w => `Conceito: "${w.join(' • ')}" — Crie uma campanha audiovisual com estética futurista, neon e narrativa imersiva.`,
-        w => `Nome da peça: "${w[0] || 'Viva'} X Futuro". Uma experiência visual que transforma o produto em símbolo emocional.`,
-        w => `Produto mínimo viável: Landing interativa + 3 criativos para redes — Público-alvo: ${w.slice(0,2).join(', ') || 'jovens urbanos'}.`
+        w => `Conceito: "${w.join(' • ')}" — Imagine uma campanha audiovisual totalmente futurista, misturando neon, hologramas e experiências imersivas que conectam seu público à emoção da marca. Cada detalhe, desde cores até tipografia e animações digitais, cria uma narrativa que diferencia sua marca no mercado e fortalece a identidade visual.`,
+        w => `Nome da peça: "${w[0] || 'Viva'} X Futuro" — Desenvolva um conceito completo de branding onde cada elemento, do logotipo à ambientação digital, transmite inovação, tecnologia e impacto emocional. Estratégias de marketing e storytelling são integradas para criar um vínculo profundo com seu público.`,
+        w => `Produto mínimo viável: Crie uma landing page interativa com 3 criativos distintos para redes sociais, incluindo vídeos curtos, banners animados e posts estratégicos. Público-alvo: ${w.slice(0,2).join(', ') || 'jovens urbanos'} — a campanha deve contar uma história coesa, engajando emocionalmente e destacando a marca de forma única no mercado.`
       ];
       const idea = templates[Math.floor(Math.random()*templates.length)](words);
       const box = document.getElementById('ideaBox');
@@ -96,7 +98,7 @@
     function typeWriter(element, text, i) {
       if(i<text.length){
         element.textContent += text.charAt(i);
-        setTimeout(()=>typeWriter(element,text,i+1),20);
+        setTimeout(()=>typeWriter(element,text,i+1),15);
       }
     }
 
