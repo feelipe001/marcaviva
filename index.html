@@ -1,0 +1,237 @@
+import React, { useState } from "react";
+
+// MarcaViva_Site.jsx
+// Single-file React component using Tailwind CSS + Framer Motion (optional) for a futuristic landing page.
+// - Hero with autoplay background video
+// - IA search box that simulates concept generation on the frontend
+// - "Falar com o time" button opens WhatsApp (auto-filled message with the generated idea)
+// - 6 project cards (easy to expand)
+
+// USAGE
+// - This component expects Tailwind CSS set up in the project (e.g. create-react-app + tailwind)
+// - If you want real AI integration, uncomment the fetchOpenAI function and wire your backend securely.
+
+export default function MarcaVivaSite() {
+  const videoUrl = "https://res.cloudinary.com/dxpygpngo/video/upload/v1761148124/mulher_futuristica_segurando_um_emblema_com_a_cp3iir.mp4";
+
+  // WhatsApp number provided by you. Assumed country code +55 (Brasil). If different, update the number string.
+  const whatsappNumber = "5512991599185"; // constructed from: 12991599185 -> assumed +55 country code
+
+  const [query, setQuery] = useState("");
+  const [idea, setIdea] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Example projects (6 placeholders) — replace image, title, desc with your real projects
+  const [projects, setProjects] = useState([
+    { id: 1, title: "Projeto Aurora", subtitle: "Identidade visual imersiva", img: "https://picsum.photos/seed/p1/600/400" },
+    { id: 2, title: "HoloBrand", subtitle: "Lançamento de produto futurista", img: "https://picsum.photos/seed/p2/600/400" },
+    { id: 3, title: "NeonPack", subtitle: "Campanha social media", img: "https://picsum.photos/seed/p3/600/400" },
+    { id: 4, title: "VivaTV", subtitle: "Série de conteúdo audiovisual", img: "https://picsum.photos/seed/p4/600/400" },
+    { id: 5, title: "Pulse UX", subtitle: "Experiência imersiva de site", img: "https://picsum.photos/seed/p5/600/400" },
+    { id: 6, title: "EchoSound", subtitle: "Identidade sonora de marca", img: "https://picsum.photos/seed/p6/600/400" },
+  ]);
+
+  // Frontend-simulated IA generator — creates a creative concept from keywords.
+  // This runs locally (no backend) and gives instant ideas you can edit.
+  function generateIdeaSimulated(words) {
+    const templates = [
+      (w) => `Conceito: "${w.join(" • ")}" — Cria uma campanha audiovisual curta com estética futurista, uso de neon e narrativa imersiva que conecta sentimentos à identidade da marca.`,
+      (w) => `Nome da peça: "${w[0] || "Viva"} X Futuro" \nResumo: Uma experiência visual que transforma o produto em um símbolo emocional; elementos: micro-interações, animações de vidro e som 3D.`,
+      (w) => `Produto mínimo viável: Landing interativa com vídeo, formulário conversacional e pacote de 3 criativos para redes (Reel + 2 posts) — Público-alvo: ${w.slice(0,2).join(", ") || "jovens urbanos"}.`,
+    ];
+
+    // Escolhe um template aleatório e preenche com as palavras
+    const tmpl = templates[Math.floor(Math.random() * templates.length)];
+    return tmpl(words);
+  }
+
+  // Handler when user submits the IA prompt
+  async function handleGenerate(e) {
+    e && e.preventDefault();
+    if (!query.trim()) return;
+
+    setLoading(true);
+    setIdea(null);
+
+    // Split the query into keywords
+    const words = query
+      .split(/[,;\s]+/)
+      .map((w) => w.trim())
+      .filter(Boolean);
+
+    // ----- FRONTEND SIMULATION -----
+    // Geramos uma ideia rapidamente no frontend para preview e validação.
+    // If you want production-grade AI results, replace this with a secure server call to OpenAI or another provider.
+    await new Promise((r) => setTimeout(r, 700)); // small delay to simulate thinking
+    const generated = generateIdeaSimulated(words);
+    setIdea(generated);
+    setLoading(false);
+
+    // ----- OPTIONAL: call a backend that calls OpenAI -----
+    // Example (do NOT put your API key in frontend):
+    // fetch('/api/generate-idea', { method: 'POST', body: JSON.stringify({ prompt: query }) })
+    //   .then(res => res.json()).then(data => setIdea(data.text)).catch(err => setIdea('Erro ao gerar'))
+  }
+
+  // Create the WhatsApp URL with a pre-filled message using the generated idea.
+  function getWhatsAppLink(currentIdea) {
+    const message = currentIdea
+      ? `Ol%C3%A1%2C%20quero%20desenvolver%20esta%20ideia%3A%20%0A%0A${encodeURIComponent(currentIdea)}`
+      : encodeURIComponent("Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20os%20servi%C3%A7os%20da%20Marca%20Viva.");
+
+    // wa.me format: https://wa.me/<countrycode><number>?text=<encoded>
+    return `https://wa.me/${whatsappNumber}?text=${message}`;
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white font-sans">
+      {/* HERO */}
+      <header className="relative h-screen overflow-hidden flex items-center justify-center">
+        <video
+          className="absolute inset-0 w-full h-full object-cover brightness-75"
+          src={videoUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+
+        <div className="relative z-10 container mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight drop-shadow-lg">Marca Viva</h1>
+          <p className="mt-4 text-xl md:text-2xl opacity-90">Dê vida à sua marca</p>
+
+          {/* Search / IA box */}
+          <form onSubmit={handleGenerate} className="mt-8 max-w-2xl mx-auto">
+            <div className="flex items-center gap-3 bg-[rgba(255,255,255,0.05)] border border-white/10 rounded-xl p-1 shadow-lg">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="flex-1 bg-transparent outline-none px-4 py-3 text-white placeholder:text-gray-300"
+                placeholder="Descreva sua ideia (ex: café urbano, marca sustentável, juventude, minimalista)"
+              />
+              <button
+                type="submit"
+                className="px-5 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:scale-[1.02] transition"
+              >
+                {loading ? "Criando..." : "Gerar ideia"}
+              </button>
+            </div>
+          </form>
+
+          {/* Resultado da IA + botão contato */}
+          <div className="mt-6 max-w-3xl mx-auto">
+            {idea && (
+              <div className="mt-4 bg-[rgba(0,0,0,0.6)] p-5 rounded-2xl border border-white/10 shadow-xl">
+                <h3 className="font-semibold">Ideia gerada</h3>
+                <p className="mt-2 whitespace-pre-line">{idea}</p>
+
+                <div className="mt-4 flex gap-3">
+                  <a
+                    href={getWhatsAppLink(idea)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block px-4 py-3 rounded-lg bg-green-600 font-semibold hover:opacity-90"
+                  >
+                    Falar com o time
+                  </a>
+
+                  <button
+                    onClick={() => {
+                      // quick copy
+                      navigator.clipboard && navigator.clipboard.writeText(idea);
+                      alert("Ideia copiada para a área de transferência!");
+                    }}
+                    className="inline-block px-4 py-3 rounded-lg border border-white/10"
+                  >
+                    Copiar ideia
+                  </button>
+                </div>
+              </div>
+            )}
+            {!idea && (
+              <p className="mt-3 opacity-80">Digite algumas palavras-chave e gere uma ideia criativa instantânea.</p>
+            )}
+          </div>
+        </div>
+
+        {/* subtle overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black pointer-events-none" />
+      </header>
+
+      {/* Projects Section */}
+      <main className="container mx-auto px-6 py-16">
+        <h2 className="text-3xl font-bold text-center">Projetos que ganharam vida</h2>
+        <p className="text-center mt-2 opacity-80 max-w-2xl mx-auto">Casos reais, narrativas e produtos transformados com estratégia e estética.</p>
+
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((p) => (
+            <article key={p.id} className="group bg-gradient-to-br from-white/3 to-white/2 rounded-2xl overflow-hidden border border-white/6 shadow-lg">
+              <div className="relative h-44 w-full">
+                <img src={p.img} alt={p.title} className="object-cover w-full h-full" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
+              </div>
+              <div className="p-4">
+                <h3 className="font-semibold text-lg">{p.title}</h3>
+                <p className="mt-2 text-sm opacity-80">{p.subtitle}</p>
+                <div className="mt-4 flex justify-between items-center">
+                  <a href="#" className="text-sm font-semibold underline">Ver case</a>
+                  <button
+                    onClick={() => alert('Abrir editor do projeto / adicionar mais detalhes')}
+                    className="text-xs border border-white/10 px-3 py-1 rounded"
+                  >
+                    Editar
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => {
+              // example of adding a new project programmatically
+              const nextId = projects.length + 1;
+              const newProject = {
+                id: nextId,
+                title: `Novo Projeto ${nextId}`,
+                subtitle: "Adicione uma descrição",
+                img: `https://picsum.photos/seed/p${nextId}/600/400`,
+              };
+              setProjects((s) => [...s, newProject]);
+            }}
+            className="px-5 py-3 rounded-lg bg-[rgba(255,255,255,0.06)] border border-white/10"
+          >
+            Adicionar projeto (teste)
+          </button>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-black/90 border-t border-white/6 py-8">
+        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <div className="font-bold">Marca Viva</div>
+            <div className="text-sm opacity-70">Dê vida à sua marca</div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <a href={getWhatsAppLink(idea)} target="_blank" rel="noreferrer" className="px-4 py-2 rounded bg-green-600 font-semibold">WhatsApp</a>
+            <a href="#projects" className="px-4 py-2 rounded border border-white/6">Portfólio</a>
+            <a href="mailto:contato@marcaviva.com" className="px-4 py-2 rounded border border-white/6">E-mail</a>
+          </div>
+        </div>
+      </footer>
+
+      {/* FOOTNOTES / INTEGRATION NOTES */}
+      {/*
+        - To integrate a real AI: create a secure server endpoint (e.g. /api/generate-idea) that calls OpenAI.
+        - Do NOT put API keys in client-side code. Use serverless function or backend.
+        - Example server payload: { prompt: `Gerar conceito criativo para: ${query}` }
+
+        - To change WhatsApp number: edit whatsappNumber variable.
+        - Tailwind: adjust colors/fonts to match brand. Consider adding Orbitron or Inter as prefered fonts.
+      */}
+    </div>
+  );
+}
