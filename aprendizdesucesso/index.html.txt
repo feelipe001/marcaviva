@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendiz de Sucesso</title>
+<style>
+  body {
+    background: linear-gradient(180deg, #091833 0%, #010a17 100%);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  header {
+    background: #0f213a;
+    padding: 25px 10px;
+    border-bottom: 3px solid #f4c542;
+  }
+
+  header h1 {
+    margin: 0;
+    color: #f4c542;
+    font-size: 2.2rem;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #102542;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px #00000088;
+  }
+
+  label {
+    display: block;
+    margin: 20px 0 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  input[type="text"] {
+    width: 80%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .nota-box {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0 40px;
+  }
+
+  .nota-btn {
+    background: #0c1b33;
+    border: 2px solid #f4c542;
+    color: #f4c542;
+    font-size: 2rem;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+  }
+
+  .nota-btn:hover, .nota-btn.selected {
+    background: #f4c542;
+    color: #0c1b33;
+    transform: scale(1.1);
+  }
+
+  button {
+    background: #f4c542;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #000;
+    font-weight: bold;
+  }
+
+  button:hover {
+    background: #ffe075;
+  }
+
+  .resultados {
+    margin-top: 40px;
+  }
+
+  .empresa-item {
+    background: #0b1730;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 10px auto;
+    max-width: 500px;
+    border: 2px solid #f4c542;
+  }
+
+  .empresa-item h3 {
+    margin: 0 0 10px;
+    color: #f4c542;
+  }
+
+  .nota-grande {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aprendiz de Sucesso</h1>
+  <p>Avaliação dos Jurados</p>
+</header>
+
+<div class="container">
+  <label>Nome da Empresa</label>
+  <input type="text" id="empresa" placeholder="Digite o nome da empresa...">
+
+  <label>Inovação</label>
+  <div class="nota-box" id="inovacao">
+    <button class="nota-btn">0</button>
+    <button class="nota-btn">1</button>
+    <button class="nota-btn">2</button>
+    <button class="nota-btn">3</button>
+    <button class="nota-btn">4</button>
+    <button class="nota-btn">5</button>
+  </div>
+
+  <label>Criatividade</label>
+  <div class="nota-box" id="criatividade">
+    <button class="nota-btn">0</button>
+    <button class="nota-btn">1</button>
+    <button class="nota-btn">2</button>
+    <button class="nota-btn">3</button>
+    <button class="nota-btn">4</button>
+    <button class="nota-btn">5</button>
+  </div>
+
+  <button onclick="salvarAvaliacao()">Salvar Avaliação</button>
+
+  <div class="resultados" id="resultados"></div>
+</div>
+
+<script>
+let notaInovacao = null;
+let notaCriatividade = null;
+
+document.querySelectorAll('#inovacao .nota-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#inovacao .nota-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    notaInovacao = btn.textContent;
+  });
+});
+
+document.querySelectorAll('#criatividade .nota-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#criatividade .nota-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    notaCriatividade = btn.textContent;
+  });
+});
+
+function salvarAvaliacao() {
+  const nome = document.getElementById('empresa').value;
+  const resultados = document.getElementById('resultados');
+
+  if (!nome || notaInovacao === null || notaCriatividade === null) {
+    alert('Preencha todos os campos e notas!');
+    return;
+  }
+
+  const empresaDiv = document.createElement('div');
+  empresaDiv.classList.add('empresa-item');
+  empresaDiv.innerHTML = `
+    <h3>${nome}</h3>
+    <p class="nota-grande">Inovação: ${notaInovacao}</p>
+    <p class="nota-grande">Criatividade: ${notaCriatividade}</p>
+  `;
+  resultados.appendChild(empresaDiv);
+
+  // Limpar para próxima empresa
+  document.getElementById('empresa').value = '';
+  document.querySelectorAll('.nota-btn').forEach(b => b.classList.remove('selected'));
+  notaInovacao = null;
+  notaCriatividade = null;
+}
+</script>
+
+</body>
+</html>
