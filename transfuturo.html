@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Transfuturo Iveco — Feedback</title>
+  <style>
+    :root{
+      --blue:#1256a3;
+      --bg:#ffffff;
+      --soft:#eef3fb;
+      --text:#0b1f33;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+    body{background:var(--bg);color:var(--text);padding:32px 16px}
+    .wrapper{max-width:760px;margin:0 auto}
+    header{text-align:center;margin-bottom:28px}
+    .logo{max-width:260px;margin:0 auto}
+    .card{background:var(--soft);padding:24px;border-radius:14px;display:flex;flex-direction:column;gap:20px;border:1px solid #dbe6f7}
+    label{font-weight:600;font-size:15px;margin-bottom:6px;display:block}
+    input,select,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #d0dce9;font-size:15px;background:white}
+    textarea{min-height:80px;resize:vertical}
+    .question{display:flex;flex-direction:column;gap:6px}
+    .options{display:flex;gap:10px}
+    .options label{font-weight:400}
+    .btn{padding:14px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;border:none;background:var(--blue);color:white;width:100%}
+    .small{text-align:center;font-size:13px;color:#697b92;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <img src="logo-transfuturo.png" class="logo" alt="Transfuturo">
+    </header>
+
+    <form onsubmit="return sendWhatsApp(event)" class="card">
+      <div class="question">
+        <label>Seu nome (opcional)</label>
+        <input name="nome" placeholder="Digite seu nome se quiser">
+      </div>
+
+      <div class="question">
+        <label>Qual seu cargo ou relação com a Transfuturo?</label>
+        <input name="cargo" placeholder="Ex: Marketing, Gestor, Cliente">
+      </div>
+
+      <div class="question">
+        <label>Nível de satisfação geral com os vídeos</label>
+        <select name="satisfacao">
+          <option>Excelente</option>
+          <option>Boa</option>
+          <option>Média</option>
+          <option>Baixa</option>
+          <option>Ruim</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>Qualidade visual e edição</label>
+        <select name="qualidade">
+          <option>Excelente</option>
+          <option>Boa</option>
+          <option>Média</option>
+          <option>Ruim</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>Clareza da mensagem transmitida</label>
+        <select name="clareza">
+          <option>Muito clara</option>
+          <option>Clara</option>
+          <option>Razoável</option>
+          <option>Confusa</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>Engajamento gerado (comentários, curtidas, compartilhamentos)</label>
+        <select name="engajamento">
+          <option>Alto</option>
+          <option>Médio</option>
+          <option>Baixo</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>O que você mais gostou nos vídeos?</label>
+        <textarea name="positivos" placeholder="Ex: edição, ritmo, mensagem..."></textarea>
+      </div>
+
+      <div class="question">
+        <label>O que podemos melhorar?</label>
+        <textarea name="melhorias" placeholder="Ex: roteiro, duração, legenda..."></textarea>
+      </div>
+
+      <div class="question">
+        <label>Sugestões de próximos conteúdos</label>
+        <textarea name="sugestoes" placeholder="Conte aqui suas ideias"></textarea>
+      </div>
+
+      <button class="btn">Enviar feedback pelo WhatsApp</button>
+      <p class="small">Seu WhatsApp abrirá automaticamente com a mensagem pronta</p>
+    </form>
+  </div>
+
+  <script>
+    function sendWhatsApp(e){
+      e.preventDefault();
+      const form=new FormData(e.target);
+      const msg=`📊 *Feedback — Transfuturo Vídeos*\n\n`+
+      `• Nome: ${form.get('nome')||'-'}\n`+
+      `• Cargo: ${form.get('cargo')||'-'}\n\n`+
+      `*Avaliação:*\n`+
+      `- Satisfação: ${form.get('satisfacao')}\n`+
+      `- Qualidade: ${form.get('qualidade')}\n`+
+      `- Clareza: ${form.get('clareza')}\n`+
+      `- Engajamento: ${form.get('engajamento')}\n\n`+
+      `*Pontos positivos:*\n${form.get('positivos')||'-'}\n\n`+
+      `*Melhorias:*\n${form.get('melhorias')||'-'}\n\n`+
+      `*Sugestões:*\n${form.get('sugestoes')||'-'}`;
+
+      const encoded=encodeURIComponent(msg);
+      const number="5512991599185";
+      window.open(`https://wa.me/${number}?text=${encoded}`,'_blank');
+      return false;
+    }
+  </script>
+</body>
+</html>
